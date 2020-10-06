@@ -7,3 +7,20 @@ services:
     volumes:
       - ./raw_data:/input_data
       - ./clean_data:/output_data
+    
+  mlflow:
+    build: ./app_mlflow
+    image: app_mlflow
+    volumes:
+      - ./model_data:/model_data
+    expose:
+      - "5000"
+    command: mlflow server --host 0.0.0.0
+
+  model_train:
+    build: ./app_model
+    image: app_model
+    volumes:
+      - ./raw_data:/data
+      - ./model_data:/model_data
+    command: python /app/model/train.py
